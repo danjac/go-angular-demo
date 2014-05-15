@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
-    "os"
+	"os"
 )
 
 type Post struct {
@@ -38,7 +38,7 @@ func initDb() (*gorp.DbMap, error) {
 	if err != nil {
 		return nil, err
 	}
-    dbMap.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds)) 
+	dbMap.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
 	return dbMap, nil
 }
 
@@ -71,21 +71,20 @@ func deleteTweet(
 	dbMap *gorp.DbMap,
 	params martini.Params,
 	r render.Render) {
-    obj, err := dbMap.Get(Post{}, params["id"])
+	obj, err := dbMap.Get(Post{}, params["id"])
 	if err != nil {
 		log.Fatal(err)
 	}
-    if obj == nil {
-        r.JSON(http.StatusNotFound, "NotFound")
-        return
-    }
-    _, err = dbMap.Delete(obj)
+	if obj == nil {
+		r.JSON(http.StatusNotFound, "NotFound")
+		return
+	}
+	_, err = dbMap.Delete(obj)
 	if err != nil {
 		log.Fatal(err)
 	}
 	r.JSON(http.StatusOK, "Deleted")
 }
-
 
 func addHandlers(m *martini.ClassicMartini) {
 
