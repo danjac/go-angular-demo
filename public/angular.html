@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html lang="en" data-ng-app="tweetApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Angular demo</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-resource.min.js"></script>
+    <script src="tweets.js"></script>
+</head>
+<body>
+    <div id="content" data-ng-controller="TweetCtrl">
+        <form data-ng-submit="addTweet();">
+            <input type="text" data-ng-model="content" placeholder="Say something..." required>
+            <input type="submit" value="Send" />
+        </form>
+        <ul class="TweetList">
+            <li ng-repeat="tweet in tweets">
+                {{tweet.content}} <a href="#" data-ng-click="deleteTweet(tweet);">x</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
