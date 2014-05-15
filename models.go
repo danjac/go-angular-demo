@@ -10,14 +10,22 @@ import (
 	"os"
 )
 
-func GetPosts(db gorp.SqlExecutor) ([]Post, error) {
+var dbMap *gorp.DbMap
+
+type Post struct {
+	Id      int64  `json:"id",binding:"-"`
+	Content string `json:"content",binding:"required"`
+}
+
+
+func GetPosts() ([]Post, error) {
 	var posts []Post
-	_, err := db.Select(&posts, "SELECT * FROM posts ORDER BY id DESC")
+	_, err := dbMap.Select(&posts, "SELECT * FROM posts ORDER BY id DESC")
 	return posts, err
 }
 
-func GetPost(db gorp.SqlExecutor, postId string) (*Post, error) {
-	obj, err := db.Get(Post{}, postId)
+func GetPost(postId string) (*Post, error) {
+	obj, err := dbMap.Get(Post{}, postId)
 	if err != nil {
 		return nil, err
 	}
@@ -27,17 +35,14 @@ func GetPost(db gorp.SqlExecutor, postId string) (*Post, error) {
 	return obj.(*Post), nil
 }
 
-type Post struct {
-	Id      int64  `json:"id",binding:"-"`
-	Content string `json:"content",binding:"required"`
+
+
+func (post *Post) Save() error {
+	return dbMap.Insert(post)
 }
 
-func (post *Post) Save(db gorp.SqlExecutor) error {
-	return db.Insert(post)
-}
-
-func (post *Post) Delete(db gorp.SqlExecutor) error {
-	_, err := db.Delete(post)
+func (post *Post) Delete() error {
+	_, err := dbMap.Delete(post)
 	return err
 }
 
@@ -54,7 +59,7 @@ func initDb(dbName string) *gorp.DbMap {
 	db, err := sql.Open("sqlite3", dbName)
 	checkErr(err)
 
-	dbMap := &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
+	dbMap = &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
 	dbMap.AddTableWithName(Post{}, "posts").SetKeys(true, "Id")
 
 	err = dbMap.CreateTablesIfNotExists()
