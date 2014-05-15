@@ -9,8 +9,7 @@ import (
 )
 
 func getTweets(db gorp.SqlExecutor, r render.Render) {
-	var posts []Post
-	_, err := db.Select(&posts, "SELECT * FROM posts ORDER BY id DESC")
+    posts, err := GetPosts(db)
 	checkErr(err)
 	r.JSON(http.StatusOK, posts)
 }
@@ -24,7 +23,7 @@ func addTweet(
 		r.JSON(http.StatusConflict, errors)
 		return
 	}
-	err := db.Insert(&post)
+	err := post.Save(db)
 	checkErr(err)
 	r.JSON(http.StatusOK, post)
 }
@@ -33,13 +32,13 @@ func deleteTweet(
 	db gorp.SqlExecutor,
 	params martini.Params,
 	r render.Render) {
-	obj, err := db.Get(Post{}, params["id"])
+    post, err := GetPost(db, params["id"])
 	checkErr(err)
-	if obj == nil {
+	if post == nil {
 		r.JSON(http.StatusNotFound, "NotFound")
 		return
 	}
-	_, err = db.Delete(obj)
+    err = post.Delete(db)
 	checkErr(err)
 	r.JSON(http.StatusOK, "Deleted")
 }
