@@ -5,6 +5,7 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 	"log"
+    "flag"
 )
 
 func checkErr(err error) {
@@ -15,8 +16,11 @@ func checkErr(err error) {
 
 func main() {
 
+    dbName := flag.String("database", "/tmp/tweets.db", "Sqlite database name")
+    flag.Parse()
+
 	// DATABASE
-	dbMap := initDb()
+	dbMap := initDb(*dbName)
 	defer dbMap.Db.Close()
 
 	// SERVER

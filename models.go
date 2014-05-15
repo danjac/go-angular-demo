@@ -50,8 +50,8 @@ func (post *Post) Validate(errors *binding.Errors, req *http.Request) {
 	}
 }
 
-func initDb() *gorp.DbMap {
-	db, err := sql.Open("sqlite3", "/tmp/tweets.db")
+func initDb(dbName string) *gorp.DbMap {
+	db, err := sql.Open("sqlite3", dbName)
 	checkErr(err)
 
 	dbMap := &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
