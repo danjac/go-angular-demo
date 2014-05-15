@@ -1,12 +1,1 @@
-# Public
-
-Yet another amazing AngularJS app
-
-## Getting Started
-
-## Documentation
-_(Coming soon)_
-
-## Examples
-_(Coming soon)_
-
+This is a simple demo to try out React and Angular side by side.
