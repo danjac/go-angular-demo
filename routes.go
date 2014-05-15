@@ -13,10 +13,7 @@ func getTweets(r render.Render) {
 	r.JSON(http.StatusOK, posts)
 }
 
-func addTweet(
-	post Post,
-	errors binding.Errors,
-	r render.Render) {
+func addTweet(post Post, errors binding.Errors, r render.Render) {
 
 	if errors.Count() > 0 {
 		r.JSON(http.StatusConflict, errors)
@@ -28,9 +25,7 @@ func addTweet(
 	r.JSON(http.StatusOK, post)
 }
 
-func deleteTweet(
-	params martini.Params,
-	r render.Render) {
+func deleteTweet(params martini.Params, r render.Render) {
 	post, err := GetPost(params["id"])
 	checkErr(err)
 	if post == nil {
