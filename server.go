@@ -26,20 +26,20 @@ func (post *Post) Validate(errors *binding.Errors, req *http.Request) {
 	}
 }
 
-func checkErr (err error) {
-    if err != nil {
-        log.Fatal(err)
-    }
+func checkErr(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func initDb() (*gorp.DbMap, error) {
 	db, err := sql.Open("sqlite3", "/tmp/tweets.db")
-    checkErr(err)
+	checkErr(err)
 
 	dbMap := &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
 	dbMap.AddTableWithName(Post{}, "posts").SetKeys(true, "Id")
 	err = dbMap.CreateTablesIfNotExists()
-    checkErr(err)
+	checkErr(err)
 	dbMap.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
 	return dbMap, nil
 }
@@ -47,7 +47,7 @@ func initDb() (*gorp.DbMap, error) {
 func getTweets(db gorp.SqlExecutor, r render.Render) {
 	var posts []Post
 	_, err := db.Select(&posts, "SELECT * FROM posts ORDER BY id DESC")
-    checkErr(err)
+	checkErr(err)
 	r.JSON(http.StatusOK, posts)
 }
 
@@ -61,7 +61,7 @@ func addTweet(
 		return
 	}
 	err := db.Insert(&post)
-    checkErr(err)
+	checkErr(err)
 	r.JSON(http.StatusOK, post)
 }
 
@@ -70,13 +70,13 @@ func deleteTweet(
 	params martini.Params,
 	r render.Render) {
 	obj, err := db.Get(Post{}, params["id"])
-    checkErr(err)
+	checkErr(err)
 	if obj == nil {
 		r.JSON(http.StatusNotFound, "NotFound")
 		return
 	}
 	_, err = db.Delete(obj)
-    checkErr(err)
+	checkErr(err)
 	r.JSON(http.StatusOK, "Deleted")
 }
 
@@ -93,7 +93,7 @@ func main() {
 
 	// DATABASE
 	dbMap, err := initDb()
-    checkErr(err)
+	checkErr(err)
 	defer dbMap.Db.Close()
 
 	// SERVER
