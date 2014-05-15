@@ -19,14 +19,14 @@ func main() {
 	flag.Parse()
 
 	// DATABASE
-	dbMap := initDb(*dbName)
+	dbMap := InitDb(*dbName)
 	defer dbMap.Db.Close()
 
 	// SERVER
 	m := martini.Classic()
 	m.Use(render.Renderer())
 
-	addRoutes(m)
+	SetupRoutes(m)
 
 	m.Run()
 }

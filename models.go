@@ -52,7 +52,7 @@ func (post *Post) Validate(errors *binding.Errors, req *http.Request) {
 	}
 }
 
-func initDb(dbName string) *gorp.DbMap {
+func InitDb(dbName string) *gorp.DbMap {
 	db, err := sql.Open("sqlite3", dbName)
 	checkErr(err)
 

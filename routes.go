@@ -37,7 +37,7 @@ func deleteTweet(params martini.Params, r render.Render) {
 	r.JSON(http.StatusOK, "Deleted")
 }
 
-func addRoutes(m *martini.ClassicMartini) {
+func SetupRoutes(m *martini.ClassicMartini) {
 
 	m.Group("/api", func(r martini.Router) {
 		r.Get("", getTweets)
