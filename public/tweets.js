@@ -9,14 +9,16 @@ angular.module('tweetApp', ['ngResource'])
             });
         }
         $scope.deleteTweet = function (tweet) {
-            tweet.$delete(function () { reload(); });
+            var index = $scope.tweets.indexOf(tweet);
+            $scope.tweets.splice(index, 1);
+            tweet.$delete();
         };
         $scope.addTweet = function () {
-            new Tweet({content: $scope.content}).$save(function () {
-                $scope.content = "";
-                reload();
-            });
+            var tweet = new Tweet({content: $scope.content});
+            $scope.content = "";
+            $scope.tweets.splice(0, 0, tweet);
+            tweet.$save();
         };
         reload();
-        $interval(reload, 500);
+        $interval(reload, 10000);
     }]);
