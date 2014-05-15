@@ -17,7 +17,6 @@ type Post struct {
 	Content string `json:"content",binding:"required"`
 }
 
-
 func GetPosts() ([]Post, error) {
 	var posts []Post
 	_, err := dbMap.Select(&posts, "SELECT * FROM posts ORDER BY id DESC")
@@ -34,8 +33,6 @@ func GetPost(postId string) (*Post, error) {
 	}
 	return obj.(*Post), nil
 }
-
-
 
 func (post *Post) Save() error {
 	return dbMap.Insert(post)
