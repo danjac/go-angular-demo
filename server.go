@@ -6,19 +6,16 @@ import (
 	"net/http"
 )
 
-func checkErr(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func main() {
 
 	dbName := flag.String("database", "/tmp/tweets.db", "Sqlite database name")
 	flag.Parse()
 
 	// DATABASE
-	dbMap := InitDb(*dbName)
+	dbMap, err := InitDb(*dbName)
+    if err != nil {
+        log.Fatal(err)
+    }
 	defer dbMap.Db.Close()
 
 	// SERVER

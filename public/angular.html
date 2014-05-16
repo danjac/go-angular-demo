@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" data-ng-app="tweetApp">
+<html lang="en" ng-app="tweetApp">
 <head>
 	<meta charset="UTF-8">
 	<title>Angular demo</title>
@@ -8,14 +8,20 @@
     <script src="tweets.js"></script>
 </head>
 <body>
-    <div id="content" data-ng-controller="TweetCtrl">
-        <form data-ng-submit="addTweet();">
-            <input type="text" data-ng-model="content" placeholder="Say something..." required>
-            <input type="submit" value="Send" />
+    <div id="content" ng-controller="TweetCtrl">
+        <form name="form" novalidate>
+            <input type="text" 
+                   ng-model="content" 
+                   placeholder="Say something..." 
+                   required 
+                   maxlength=140>
+            <button ng-click="addTweet()"
+                    ng-disabled="form.$invalid">Send</button>
+
         </form>
         <ul class="TweetList">
             <li ng-repeat="tweet in tweets">
-                {{tweet.content}} <a href="#" data-ng-click="deleteTweet(tweet);">x</a>
+                {{tweet.content}} <a href="#" ng-click="deleteTweet(tweet);">x</a>
             </li>
         </ul>
     </div>
