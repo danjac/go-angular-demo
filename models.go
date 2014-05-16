@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"github.com/coopernurse/gorp"
-	"github.com/martini-contrib/binding"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
@@ -16,6 +15,19 @@ type Post struct {
 	Id      int64  `json:"id",binding:"-"`
 	Content string `json:"content",binding:"required"`
 }
+
+type Errors struct {
+    Fields map[string]string
+}
+
+func NewErrors() *Errors {
+    return &Errors{Fields: make(map[string]string)}
+}
+
+func (errors Errors) Count() int {
+    return len(errors.Fields)
+}
+
 
 func GetPosts() ([]Post, error) {
 	var posts []Post
@@ -43,13 +55,18 @@ func (post *Post) Delete() error {
 	return err
 }
 
-func (post *Post) Validate(errors *binding.Errors, req *http.Request) {
+func (post *Post) Validate(req *http.Request) *Errors {
+
+    errors := NewErrors()
+
 	if post.Content == "" {
 		errors.Fields["content"] = "Content is missing"
 	}
 	if len(post.Content) > 140 {
 		errors.Fields["content"] = "Content must be max 140 characters"
 	}
+
+    return errors
 }
 
 func InitDb(dbName string) *gorp.DbMap {

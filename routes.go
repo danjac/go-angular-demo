@@ -1,47 +1,64 @@
 package main
 
 import (
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/binding"
-	"github.com/martini-contrib/render"
+    "github.com/gorilla/mux"
 	"net/http"
+    "encoding/json"
 )
 
-func getTweets(r render.Render) {
-	posts, err := GetPosts()
-	checkErr(err)
-	r.JSON(http.StatusOK, posts)
+func renderJSON(w http.ResponseWriter, status int, value interface{}) {
+    w.WriteHeader(status)
+    w.Header().Add("content-type", "application/json")
+    json.NewEncoder(w).Encode(value)
 }
 
-func addTweet(post Post, errors binding.Errors, r render.Render) {
+func getTweets(w http.ResponseWriter, r *http.Request) {
+	posts, err := GetPosts()
+	checkErr(err)
+	renderJSON(w, http.StatusOK, posts)
+}
+
+func addTweet(w http.ResponseWriter, r *http.Request) {
+
+    post := &Post{}
+    err := json.NewDecoder(r.Body).Decode(post)
+    checkErr(err)
+
+    errors := post.Validate(r)
 
 	if errors.Count() > 0 {
-		r.JSON(http.StatusConflict, errors)
+		renderJSON(w, http.StatusConflict, errors)
 		return
 	}
 
-	err := post.Save()
+	err = post.Save()
 	checkErr(err)
-	r.JSON(http.StatusOK, post)
+	renderJSON(w, http.StatusOK, post)
 }
 
-func deleteTweet(params martini.Params, r render.Render) {
-	post, err := GetPost(params["id"])
+func deleteTweet(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+	post, err := GetPost(vars["id"])
 	checkErr(err)
 	if post == nil {
-		r.JSON(http.StatusNotFound, "NotFound")
+		renderJSON(w, http.StatusNotFound, "NotFound")
 		return
 	}
 	err = post.Delete()
 	checkErr(err)
-	r.JSON(http.StatusOK, "Deleted")
+	renderJSON(w, http.StatusOK, "Deleted")
 }
 
-func SetupRoutes(m *martini.ClassicMartini) {
+func SetupRoutes() *mux.Router {
+    
+    r := mux.NewRouter()
 
-	m.Group("/api", func(r martini.Router) {
-		r.Get("", getTweets)
-		r.Post("", binding.Json(Post{}), addTweet)
-		r.Delete("/:id", deleteTweet)
-	})
+    r.HandleFunc("/api", getTweets).Methods("GET")
+    r.HandleFunc("/api", addTweet).Methods("POST")
+    r.HandleFunc("/api/{id}", deleteTweet).Methods("DELETE")
+    
+    // serve static files
+    r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
+
+    return r
 }

@@ -2,9 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
 	"log"
+    "net/http"
 )
 
 func checkErr(err error) {
@@ -23,10 +22,8 @@ func main() {
 	defer dbMap.Db.Close()
 
 	// SERVER
-	m := martini.Classic()
-	m.Use(render.Renderer())
+	r := SetupRoutes()
+    http.Handle("/", r)
+    http.ListenAndServe(":3000", nil)
 
-	SetupRoutes(m)
-
-	m.Run()
 }
