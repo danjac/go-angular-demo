@@ -1,6 +1,10 @@
 'use strict';
 
 angular.module('tweetApp', ['ngResource'])
+    .config(['$resourceProvider', function ($resourceProvider) {
+        // Don't strip trailing slashes from calculated URLs
+        $resourceProvider.defaults.stripTrailingSlashes = false;
+    }])
     .service('Tweet', ['$resource', function ($resource) {
         return $resource("/api/:id", {id: '@id'});
     }])
@@ -22,5 +26,5 @@ angular.module('tweetApp', ['ngResource'])
             tweet.$save();
         };
         reload();
-        $interval(reload, 10000);
+        //$interval(reload, 10000);
     }]);

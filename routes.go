@@ -53,11 +53,14 @@ func SetupRoutes() *mux.Router {
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api", getTweets).Methods("GET")
-	r.HandleFunc("/api", addTweet).Methods("POST")
-	r.HandleFunc("/api/{id}", deleteTweet).Methods("DELETE")
+    // API
+    s := r.PathPrefix("/api").Subrouter()
 
-	// serve static files
+	s.HandleFunc("/", getTweets).Methods("GET")
+	s.HandleFunc("/", addTweet).Methods("POST")
+	s.HandleFunc("/{id}", deleteTweet).Methods("DELETE")
+
+	// STATIC FILES
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
 
 	return r
