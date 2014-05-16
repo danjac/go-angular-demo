@@ -3,7 +3,7 @@
 */
 'use strict';
 
-var Tweet = React.createClass({
+var Post = React.createClass({
     
     handleDelete: function () {
         this.props.handleDelete();
@@ -11,29 +11,33 @@ var Tweet = React.createClass({
     },
     render: function () {
         return (
-            <li className="Tweet">{this.props.children} <a href="#" onClick={this.handleDelete}>x</a></li>
+            <li className="post">{this.props.children} <a href="#" onClick={this.handleDelete}>x</a></li>
         )
     }
 
 });
 
-var TweetForm = React.createClass({
+var PostForm = React.createClass({
     handleSubmit: function () {
         var contentNode = this.refs.content.getDOMNode();
         var content = contentNode.value.trim();
+        if (!content) {
+            return false;
+        }
         if (content) {
             this.props.handleSubmit({content: content});
         }
         contentNode.value = "";
+        return false;
     },
 
     render: function () {
         return (
-            <form className="TweetForm" 
+            <form className="PostForm" 
                   onSubmit={this.handleSubmit}>
                 <input type="text" 
                        ref="content" 
-                       placeholder="tweet something"/>
+                       placeholder="post something"/>
                 <input type="submit" value="Send"/>
             </form>
         )
@@ -41,20 +45,24 @@ var TweetForm = React.createClass({
 });
 
 
-var TweetList = React.createClass({
+var PostList = React.createClass({
     
     getInitialState: function () {
         return {data: []};
     },
 
-    handleSubmit: function (tweet) {
-        this.state.data.splice(0, 0, tweet);
+    handleSubmit: function (post) {
+        var _this = this;
         $.ajax({
             url: this.props.url,
             dataType: 'json',
             type: 'POST',
-            data: JSON.stringify(tweet)
+            data: JSON.stringify(post)
+        }).success(function (newPost){
+            var newData = [newPost].concat(_this.state.data);
+            _this.setState({data: newData});
         });
+        return false;
     },
 
     componentWillMount: function () {
@@ -66,33 +74,34 @@ var TweetList = React.createClass({
         });
     },
 
-    handleDelete: function(tweet) {
-        var pos = this.state.data.indexOf(tweet);
+    handleDelete: function(post) {
+        var pos = this.state.data.indexOf(post);
         if (pos > -1){
             this.state.data.splice(pos, 1);
             this.setState({data: this.state.data});
             $.ajax({
-                url: this.props.url + tweet.id,
+                url: this.props.url + post.id,
                 dataType: "json",
                 type: "DELETE"
             });
         }
+        return false;
     },
 
     render: function () {
     
         var handleDelete = this.handleDelete;
-        var tweetNodes = this.state.data.map(function (tweet) {
-            var _handleDelete = function () { handleDelete(tweet); };
-            return <Tweet key={tweet.id} 
-                          handleDelete={_handleDelete}>{tweet.content}</Tweet>
+        var postNodes = this.state.data.map(function (post) {
+            var _handleDelete = function () { handleDelete(post); };
+            return <Post key={post.id} 
+                          handleDelete={_handleDelete}>{post.content}</Post>
         });
 
         return (
             <div>
-            <TweetForm handleSubmit={this.handleSubmit}/>
-            <ul className="TweetList">
-            {tweetNodes}                            
+            <PostForm handleSubmit={this.handleSubmit}/>
+            <ul className="PostList">
+            {postNodes}                            
             </ul>
             </div>
         )
@@ -101,7 +110,7 @@ var TweetList = React.createClass({
 });
 
 React.renderComponent(
-    <TweetList url="/api/"/>,
+    <PostList url="/api/"/>,
     document.getElementById("content")
     );
 
