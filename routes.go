@@ -6,12 +6,12 @@ import (
 	"net/http"
 )
 
-type appHandler func(w http.ResponseWriter, r *http.Request) error 
+type appHandler func(w http.ResponseWriter, r *http.Request) error
 
 func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-    if err := fn(w, r); err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
+	if err := fn(w, r); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func renderJSON(w http.ResponseWriter, status int, value interface{}) {
@@ -22,20 +22,20 @@ func renderJSON(w http.ResponseWriter, status int, value interface{}) {
 
 func PostListHandler(w http.ResponseWriter, r *http.Request) error {
 	posts, err := GetPosts()
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 	renderJSON(w, http.StatusOK, posts)
-    return nil
+	return nil
 }
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) error {
 
 	post := &Post{}
 	err := json.NewDecoder(r.Body).Decode(post)
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 
 	errors := post.Validate(r)
 
@@ -45,29 +45,29 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	err = post.Save()
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 	renderJSON(w, http.StatusOK, post)
-    return nil
+	return nil
 }
 
 func DeletePostHandler(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	post, err := GetPost(vars["id"])
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 	if post == nil {
 		renderJSON(w, http.StatusNotFound, "NotFound")
 		return nil
 	}
 	err = post.Delete()
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 	renderJSON(w, http.StatusOK, "Deleted")
-    return nil
+	return nil
 }
 
 func SetupRoutes() *mux.Router {

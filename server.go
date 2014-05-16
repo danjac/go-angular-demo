@@ -13,9 +13,9 @@ func main() {
 
 	// DATABASE
 	dbMap, err := InitDb(*dbName)
-    if err != nil {
-        log.Fatal(err)
-    }
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer dbMap.Db.Close()
 
 	// SERVER

@@ -36,7 +36,7 @@ func GetPosts() ([]Post, error) {
 
 func GetPost(postId string) (*Post, error) {
 	obj, err := dbMap.Get(Post{}, postId)
-    if err != nil {
+	if err != nil {
 		return nil, err
 	}
 	if obj == nil {
@@ -70,16 +70,16 @@ func (post *Post) Validate(req *http.Request) *Errors {
 
 func InitDb(dbName string) (*gorp.DbMap, error) {
 	db, err := sql.Open("sqlite3", dbName)
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
 	dbMap = &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
 	dbMap.AddTableWithName(Post{}, "posts").SetKeys(true, "Id")
 
 	if err = dbMap.CreateTablesIfNotExists(); err != nil {
-        return nil, err
-    }
+		return nil, err
+	}
 
 	dbMap.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
 	return dbMap, nil
