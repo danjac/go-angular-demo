@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('tweetApp', ['ngResource'])
-    .controller('TweetCtrl', ['$scope', '$interval', '$resource', function ($scope, $interval, $resource) {
-        var Tweet = $resource("/api/:id", {id: '@id'});
+    .service('Tweet', ['$resource', function ($resource) {
+        return $resource("/api/:id", {id: '@id'});
+    }])
+    .controller('TweetCtrl', ['$scope', '$interval', 'Tweet', function ($scope, $interval, Tweet) {
         function reload() {
             Tweet.query().$promise.then(function (tweets) {
                 $scope.tweets = tweets;
