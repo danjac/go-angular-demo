@@ -107,8 +107,8 @@ var PostList = React.createClass({
             <PostForm handleSubmit={this.handleSubmit}/>
             <ul className="PostList">
             {postNodes}                            
-            {message}
             </ul>
+            {message}
             </div>
         )
 
