@@ -5,6 +5,10 @@
 
 var Post = React.createClass({
     
+    propTypes: {
+        content: React.PropTypes.string.isRequired
+    },
+
     handleDelete: function () {
         this.props.handleDelete();
         return false;
@@ -96,12 +100,14 @@ var PostList = React.createClass({
             return <Post key={post.id} 
                           handleDelete={_handleDelete}>{post.content}</Post>
         });
+        var message = this.state.data.length? "": <div><b>Post something!</b></div>
 
         return (
             <div>
             <PostForm handleSubmit={this.handleSubmit}/>
             <ul className="PostList">
             {postNodes}                            
+            {message}
             </ul>
             </div>
         )
