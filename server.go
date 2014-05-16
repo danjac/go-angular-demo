@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"log"
-    "net/http"
+	"net/http"
 )
 
 func checkErr(err error) {
@@ -23,7 +23,7 @@ func main() {
 
 	// SERVER
 	r := SetupRoutes()
-    http.Handle("/", r)
-    http.ListenAndServe(":3000", nil)
+	http.Handle("/", r)
+	http.ListenAndServe(":3000", nil)
 
 }

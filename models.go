@@ -17,17 +17,16 @@ type Post struct {
 }
 
 type Errors struct {
-    Fields map[string]string
+	Fields map[string]string
 }
 
 func NewErrors() *Errors {
-    return &Errors{Fields: make(map[string]string)}
+	return &Errors{Fields: make(map[string]string)}
 }
 
 func (errors Errors) Count() int {
-    return len(errors.Fields)
+	return len(errors.Fields)
 }
-
 
 func GetPosts() ([]Post, error) {
 	var posts []Post
@@ -57,7 +56,7 @@ func (post *Post) Delete() error {
 
 func (post *Post) Validate(req *http.Request) *Errors {
 
-    errors := NewErrors()
+	errors := NewErrors()
 
 	if post.Content == "" {
 		errors.Fields["content"] = "Content is missing"
@@ -66,7 +65,7 @@ func (post *Post) Validate(req *http.Request) *Errors {
 		errors.Fields["content"] = "Content must be max 140 characters"
 	}
 
-    return errors
+	return errors
 }
 
 func InitDb(dbName string) *gorp.DbMap {
