@@ -9,6 +9,15 @@ angular.module('postApp', ['ngResource'])
         return $resource("/api/:id", {id: '@id'});
     }])
     .controller('PostCtrl', ['$scope', 'Post', function ($scope, Post) {
+
+        $scope.$watch('content', function () {
+            if ($scope.content) {
+                var contentLength = $scope.content.length;
+                $scope.charsRemaining = 140 - contentLength;
+                $scope.contentTooLong = $scope.charsRemaining < 10;
+            }
+        });
+
         function getPosts() {
             Post.query().$promise.then(function (posts) {
                 $scope.posts = posts;
