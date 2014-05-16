@@ -12,13 +12,13 @@ func renderJSON(w http.ResponseWriter, status int, value interface{}) {
 	json.NewEncoder(w).Encode(value)
 }
 
-func getTweets(w http.ResponseWriter, r *http.Request) {
+func PostListHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := GetPosts()
 	checkErr(err)
 	renderJSON(w, http.StatusOK, posts)
 }
 
-func addTweet(w http.ResponseWriter, r *http.Request) {
+func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	post := &Post{}
 	err := json.NewDecoder(r.Body).Decode(post)
@@ -36,7 +36,7 @@ func addTweet(w http.ResponseWriter, r *http.Request) {
 	renderJSON(w, http.StatusOK, post)
 }
 
-func deleteTweet(w http.ResponseWriter, r *http.Request) {
+func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	post, err := GetPost(vars["id"])
 	checkErr(err)
@@ -53,12 +53,12 @@ func SetupRoutes() *mux.Router {
 
 	r := mux.NewRouter()
 
-    // API
-    s := r.PathPrefix("/api").Subrouter()
+	// API
+	s := r.PathPrefix("/api").Subrouter()
 
-	s.HandleFunc("/", getTweets).Methods("GET")
-	s.HandleFunc("/", addTweet).Methods("POST")
-	s.HandleFunc("/{id}", deleteTweet).Methods("DELETE")
+	s.HandleFunc("/", PostListHandler).Methods("GET")
+	s.HandleFunc("/", CreatePostHandler).Methods("POST")
+	s.HandleFunc("/{id}", DeletePostHandler).Methods("DELETE")
 
 	// STATIC FILES
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
