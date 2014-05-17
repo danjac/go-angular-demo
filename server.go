@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+    "os"
 	"log"
 	"net/http"
 )
@@ -21,6 +22,9 @@ func main() {
 	// SERVER
 	r := SetupRoutes()
 	http.Handle("/", r)
-	http.ListenAndServe(":3000", nil)
-
+    port := os.Getenv("PORT") 
+    if port == "" {
+        port = "3000"
+    }
+	http.ListenAndServe(":" + port, nil)
 }
