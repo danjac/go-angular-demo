@@ -30,7 +30,7 @@ func (errors Errors) Count() int {
 
 func GetPosts() ([]Post, error) {
 	var posts []Post
-	_, err := dbMap.Select(&posts, "SELECT * FROM posts ORDER BY id DESC")
+	_, err := dbMap.Select(&posts, "SELECT * FROM posts ORDER BY id DESC LIMIT 20")
 	return posts, err
 }
 
