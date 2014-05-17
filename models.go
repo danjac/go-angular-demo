@@ -12,8 +12,8 @@ import (
 var dbMap *gorp.DbMap
 
 type Post struct {
-	Id      int64  `json:"id",binding:"-"`
-	Content string `json:"content",binding:"required"`
+	Id      int64  `json:"id"`
+	Content string `json:"content"`
 }
 
 type Errors struct {
