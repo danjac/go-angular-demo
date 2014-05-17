@@ -8,7 +8,7 @@ angular.module('postApp', ['ngResource'])
     .service('Post', ['$resource', function ($resource) {
         return $resource("/api/:id", {id: '@id'});
     }])
-    .controller('PostCtrl', ['$scope', 'Post', function ($scope, Post) {
+    .controller('PostCtrl', ['$scope', '$interval', 'Post', function ($scope, $interval, Post) {
 
         $scope.$watch('content', function () {
             if ($scope.content) {
@@ -35,4 +35,5 @@ angular.module('postApp', ['ngResource'])
             post.$save();
         };
         getPosts();
+        $interval(getPosts, 5000);
     }]);
