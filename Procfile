@@ -1,1 +1,1 @@
-web: demoapp
+web: angular-react-compare
