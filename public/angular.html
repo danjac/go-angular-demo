@@ -24,7 +24,7 @@
                        placeholder="Say something..." 
                        required 
                        maxlength=140>
-                       <p class="bg-info" ng-class="{'bg-danger': contentTooLong}" ng-show="content.length">{{charsRemaining}} characters left</p>
+                       <content-length-tracker content="content" maxlength="140" />
                 </div>
                 <button class="btn btn-default"
                         ng-click="addPost()"

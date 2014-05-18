@@ -10,14 +10,6 @@ angular.module('postApp', ['ngResource'])
     }])
     .controller('PostCtrl', ['$scope', '$interval', 'Post', function ($scope, $interval, Post) {
 
-        $scope.$watch('content', function () {
-            if ($scope.content) {
-                var contentLength = $scope.content.length;
-                $scope.charsRemaining = 140 - contentLength;
-                $scope.contentTooLong = $scope.charsRemaining < 10;
-            }
-        });
-
         function getPosts() {
             Post.query().$promise.then(function (posts) {
                 $scope.posts = posts;
@@ -36,4 +28,24 @@ angular.module('postApp', ['ngResource'])
         };
         getPosts();
         $interval(getPosts, 5000);
-    }]);
+    }])
+    .directive('contentLengthTracker', function () {
+        return {
+            link: function ($scope, element, attrs) {
+                $scope.$watch(attrs.content, function (value) {
+                    if ($scope.content) {
+                        $scope.charsRemaining = parseInt(attrs.maxlength, 10) - $scope.content.length;
+                        $scope.showWarning = $scope.charsRemaining < 10;
+                    }
+                });
+            },
+            restrict: 'E',
+            replace: true,
+            scope: {
+                content: '=',
+                maxlength: "="
+            },
+            template: '<div ng-show="content" class="bg-info" ng-class="{\'bg-danger\': showWarning}">{{charsRemaining}}</div>'
+        };
+    });
+
