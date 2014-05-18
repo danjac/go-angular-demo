@@ -31,19 +31,17 @@ angular.module('postApp', ['ngResource'])
         $interval(getPosts, 5000);
     }])
     .directive('contentLengthTracker', function () {
-        function isDangerZone(charsRemaining, maxLength) {
-            return charsRemaining < (maxLength / 10);
-        }
         return {
             link: function ($scope, element, attrs) {
-                var maxLength = parseInt(attrs.maxlength, 10);
+                var maxLength = parseInt(attrs.maxlength, 10),
+                    showWarningAt = maxLength / 10;
                 $scope.$watch(
                     function () { return $scope.content; },
                     function () {
                         var content = $scope.content;
                         if ($scope.content) {
                             $scope.charsRemaining = maxLength - $scope.content.length;
-                            $scope.showWarning = isDangerZone($scope.charsRemaining, maxLength);
+                            $scope.showWarning = $scope.charsRemaining <= showWarningAt;
                         }
                     }
                 );
