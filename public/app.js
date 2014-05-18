@@ -10,6 +10,8 @@ angular.module('postApp', ['ngResource'])
     }])
     .controller('PostCtrl', ['$scope', '$interval', 'Post', function ($scope, $interval, Post) {
 
+        $scope.newPost = new Post();
+
         function getPosts() {
             Post.query().$promise.then(function (posts) {
                 $scope.posts = posts;
@@ -21,10 +23,9 @@ angular.module('postApp', ['ngResource'])
             post.$delete();
         };
         $scope.addPost = function () {
-            var post = new Post({content: $scope.content});
-            $scope.content = "";
-            $scope.posts.splice(0, 0, post);
-            post.$save();
+            $scope.posts.splice(0, 0, $scope.newPost);
+            $scope.newPost.$save();
+            $scope.newPost = new Post();
         };
         getPosts();
         $interval(getPosts, 5000);
