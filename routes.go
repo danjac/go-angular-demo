@@ -79,7 +79,7 @@ func SetupRoutes() *mux.Router {
 
 	s.Handle("/", appHandler(PostListHandler)).Methods("GET")
 	s.Handle("/", appHandler(CreatePostHandler)).Methods("POST")
-	s.Handle("/{id}$", appHandler(DeletePostHandler)).Methods("DELETE")
+	s.Handle("/{id}", appHandler(DeletePostHandler)).Methods("DELETE")
 
 	// STATIC FILES
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
