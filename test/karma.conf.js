@@ -4,7 +4,8 @@ module.exports = function(config){
     basePath : '../',
 
     files : [
-      'public/js/**/*.js',
+      'public/app.js',
+      //'test/angular-mocks.js',
       'test/unit/**/*.js'
     ],
 
@@ -12,7 +13,7 @@ module.exports = function(config){
 
     frameworks: ['jasmine'],
 
-    browsers : ['Firefox'],
+    browsers : ['Chrome'],
 
     plugins : [
             'karma-chrome-launcher',
