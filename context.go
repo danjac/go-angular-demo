@@ -39,5 +39,3 @@ type AppHandler func(ctx *RequestContext)
 func (fn AppHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fn(NewRequestContext(w, r))
 }
-
-
