@@ -17,8 +17,7 @@ func PostListHandler(ctx *RequestContext) {
 func CreatePostHandler(ctx *RequestContext) {
 
 	post := &Post{}
-	err := ctx.DecodeJSON(post)
-	if err != nil {
+	if err := ctx.DecodeJSON(post); err != nil {
 		ctx.RenderError(err)
 		return
 	}
@@ -30,8 +29,7 @@ func CreatePostHandler(ctx *RequestContext) {
 		return
 	}
 
-	err = post.Save()
-	if err != nil {
+	if err := post.Save(); err != nil {
 		ctx.RenderError(err)
 		return
 	}
@@ -48,8 +46,7 @@ func DeletePostHandler(ctx *RequestContext) {
 		ctx.RenderJSON(http.StatusNotFound, "NotFound")
 		return
 	}
-	err = post.Delete()
-	if err != nil {
+	if err := post.Delete(); err != nil {
 		ctx.RenderError(err)
 		return
 	}
