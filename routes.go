@@ -78,7 +78,7 @@ func DeletePostHandler(ctx *RequestContext) {
 	}
 	if post == nil {
 		ctx.RenderJSON(http.StatusNotFound, "NotFound")
-        return
+		return
 	}
 	err = post.Delete()
 	if err != nil {
