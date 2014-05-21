@@ -22,7 +22,7 @@ func (ctx *RequestContext) RenderJSON(status int, value interface{}) {
 	json.NewEncoder(ctx.Response).Encode(value)
 }
 
-func (ctx *RequestContext) RenderError(err error) {
+func (ctx *RequestContext) HandleError(err error) {
 	http.Error(ctx.Response, err.Error(), http.StatusInternalServerError)
 }
 

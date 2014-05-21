@@ -8,7 +8,7 @@ import (
 func PostListHandler(ctx *RequestContext) {
 	posts, err := GetPosts()
 	if err != nil {
-		ctx.RenderError(err)
+		ctx.HandleError(err)
 		return
 	}
 	ctx.RenderJSON(http.StatusOK, posts)
@@ -18,19 +18,17 @@ func CreatePostHandler(ctx *RequestContext) {
 
 	post := &Post{}
 	if err := ctx.DecodeJSON(post); err != nil {
-		ctx.RenderError(err)
+		ctx.HandleError(err)
 		return
 	}
 
-	errors := post.Validate(ctx.Request)
-
-	if errors.Count() > 0 {
+	if errors := post.Validate(ctx.Request); errors.Count() > 0 {
 		ctx.RenderJSON(http.StatusConflict, errors)
 		return
 	}
 
 	if err := post.Save(); err != nil {
-		ctx.RenderError(err)
+		ctx.HandleError(err)
 		return
 	}
 	ctx.RenderJSON(http.StatusOK, post)
@@ -39,7 +37,7 @@ func CreatePostHandler(ctx *RequestContext) {
 func DeletePostHandler(ctx *RequestContext) {
 	post, err := GetPost(ctx.Var("id"))
 	if err != nil {
-		ctx.RenderError(err)
+		ctx.HandleError(err)
 		return
 	}
 	if post == nil {
@@ -47,7 +45,7 @@ func DeletePostHandler(ctx *RequestContext) {
 		return
 	}
 	if err := post.Delete(); err != nil {
-		ctx.RenderError(err)
+		ctx.HandleError(err)
 		return
 	}
 
