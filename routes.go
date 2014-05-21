@@ -30,11 +30,14 @@ func (ctx *RequestContext) DecodeJSON(value interface{}) error {
 	return json.NewDecoder(ctx.Request.Body).Decode(value)
 }
 
+func NewRequestContext(w http.ResponseWriter, r *http.Request) *RequestContext {
+	return &RequestContext{Response: w, Request: r, Vars: mux.Vars(r)}
+}
+
 type appHandler func(ctx *RequestContext)
 
 func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	ctx := &RequestContext{Response: w, Request: r, Vars: mux.Vars(r)}
-	fn(ctx)
+	fn(NewRequestContext(w, r))
 }
 
 func PostListHandler(ctx *RequestContext) {
