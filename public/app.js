@@ -8,7 +8,7 @@ angular.module('postApp', ['ngResource'])
     .service('Post', ['$resource', function ($resource) {
         return $resource("/api/:id", {id: '@id'});
     }])
-    .controller('PostCtrl', ['$scope', '$interval', 'Post', function ($scope, $interval, Post) {
+    .controller('PostCtrl', ['$scope', 'Post', function ($scope, Post) {
 
         $scope.newPost = new Post();
 
@@ -28,7 +28,6 @@ angular.module('postApp', ['ngResource'])
             $scope.newPost = new Post();
         };
         getPosts();
-        $interval(getPosts, 5000);
     }])
     .directive('contentLengthTracker', function () {
         return {
