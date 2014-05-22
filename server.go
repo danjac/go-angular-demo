@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"github.com/gorilla/context"
 	"log"
 	"net/http"
 	"os"
@@ -21,7 +20,7 @@ func main() {
 	defer dbMap.Db.Close()
 
 	// SERVER
-	r := context.ClearHandler(SetupRoutes())
+	r := SetupRoutes()
 	http.Handle("/", r)
 	port := os.Getenv("PORT")
 	if port == "" {
