@@ -22,7 +22,7 @@ func CreatePostHandler(ctx *RequestContext) {
 		return
 	}
 
-	if errors := post.Validate(ctx.Request); errors.Count() > 0 {
+	if errors := post.Validate(); errors.Count() > 0 {
 		ctx.RenderJSON(http.StatusConflict, errors)
 		return
 	}

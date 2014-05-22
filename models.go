@@ -5,7 +5,6 @@ import (
 	"github.com/coopernurse/gorp"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
-	"net/http"
 	"os"
 )
 
@@ -54,7 +53,7 @@ func (post *Post) Delete() error {
 	return err
 }
 
-func (post *Post) Validate(req *http.Request) *Errors {
+func (post *Post) Validate() *Errors {
 
 	errors := NewErrors()
 
