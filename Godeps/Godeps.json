@@ -16,6 +16,14 @@
 			"Rev": "42cbcc5a246f176e74a0a29f1afc00a2cfd3d11d"
 		},
 		{
+			"ImportPath": "github.com/gorilla/securecookie",
+			"Rev": "155134204c034796bcd7a72c1e1b53ba005735c6"
+		},
+		{
+			"ImportPath": "github.com/gorilla/sessions",
+			"Rev": "65d3f02177b066fbe0c4682d5c01b1dbfab2947c"
+		},
+		{
 			"ImportPath": "github.com/mattn/go-sqlite3",
 			"Rev": "58c62dc30cda06e4a74e18f6489bb6c112fc6e5d"
 		}
