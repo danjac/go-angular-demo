@@ -10,8 +10,8 @@ import (
 var store *sessions.CookieStore
 
 func init() {
-    // TBD: grab key from environ
-    store = sessions.NewCookieStore([]byte("secret-key"))
+	// TBD: grab key from environ
+	store = sessions.NewCookieStore([]byte("secret-key"))
 }
 
 type RequestContext struct {
