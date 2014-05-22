@@ -3,13 +3,29 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"net/http"
 )
+
+var store *sessions.CookieStore
+
+func init() {
+    // TBD: grab key from environ
+    store = sessions.NewCookieStore([]byte("secret-key"))
+}
 
 type RequestContext struct {
 	Response http.ResponseWriter
 	Request  *http.Request
 	Vars     map[string]string
+}
+
+func (ctx *RequestContext) GetSession(name string) (*sessions.Session, error) {
+	return store.Get(ctx.Request, name)
+}
+
+func (ctx *RequestContext) SaveSession(session *sessions.Session) error {
+	return session.Save(ctx.Request, ctx.Response)
 }
 
 func (ctx *RequestContext) Var(name string) string {

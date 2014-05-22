@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -15,6 +16,27 @@ func PostListHandler(ctx *RequestContext) {
 }
 
 func CreatePostHandler(ctx *RequestContext) {
+
+	session, err := ctx.GetSession("user")
+	if err != nil {
+		ctx.HandleError(err)
+		return
+	}
+
+	numPosts, ok := session.Values["numPosts"].(int)
+	if !ok {
+		numPosts = 0
+	}
+	numPosts += 1
+
+	log.Printf("%d posts sent by this user", numPosts)
+
+	session.Values["numPosts"] = numPosts
+
+	if err := ctx.SaveSession(session); err != nil {
+		ctx.HandleError(err)
+		return
+	}
 
 	post := &Post{}
 	if err := ctx.DecodeJSON(post); err != nil {
