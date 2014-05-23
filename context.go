@@ -42,17 +42,9 @@ func (ctx *RequestContext) RenderJSON(status int, value interface{}) {
 	json.NewEncoder(ctx.Response).Encode(value)
 }
 
-func (ctx *RequestContext) RenderString(status int, msg string) {
+func (ctx *RequestContext) Render(status int, msg string) {
 	ctx.Response.WriteHeader(status)
 	ctx.Response.Write([]byte(msg))
-}
-
-func (ctx *RequestContext) HandleOK(msg string) {
-	ctx.RenderString(http.StatusOK, msg)
-}
-
-func (ctx *RequestContext) HandleNotFound(msg string) {
-	ctx.RenderString(http.StatusNotFound, msg)
 }
 
 func (ctx *RequestContext) HandleError(err error) {

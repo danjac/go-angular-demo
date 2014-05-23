@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('postApp', ['ngResource'])
-    .config(['$resourceProvider', function ($resourceProvider) {
+    .config(['$resourceProvider', '$httpProvider', function ($resourceProvider, $httpProvider) {
         // Don't strip trailing slashes from calculated URLs
         $resourceProvider.defaults.stripTrailingSlashes = false;
+        $httpProvider.defaults.xsrfHeaderName = "X-CSRF-Token";
+        $httpProvider.defaults.xsrfCookieName = "csrf_token";
     }])
     .service('Post', ['$resource', function ($resource) {
         return $resource("/api/:id", {id: '@id'});

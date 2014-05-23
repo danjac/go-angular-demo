@@ -24,6 +24,11 @@
 			"Rev": "65d3f02177b066fbe0c4682d5c01b1dbfab2947c"
 		},
 		{
+			"ImportPath": "github.com/justinas/nosurf",
+			"Comment": "0.1-21-gb3da8cb",
+			"Rev": "b3da8cbf9967ae5a9ee645884f98c00e7871f664"
+		},
+		{
 			"ImportPath": "github.com/mattn/go-sqlite3",
 			"Rev": "58c62dc30cda06e4a74e18f6489bb6c112fc6e5d"
 		}

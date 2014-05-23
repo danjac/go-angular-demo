@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/justinas/nosurf"
 	"log"
 	"net/http"
 	"os"
@@ -20,7 +21,7 @@ func main() {
 	defer dbMap.Db.Close()
 
 	// SERVER
-	http.Handle("/", SetupRoutes())
+	http.Handle("/", nosurf.New(SetupRoutes()))
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
