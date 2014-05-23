@@ -53,7 +53,7 @@ func CreatePostHandler(ctx *RequestContext) {
 		ctx.HandleError(err)
 		return
 	}
-	ctx.RenderJSON(http.StatusOK, post)
+	ctx.RenderJSON(http.StatusCreated, post)
 }
 
 func DeletePostHandler(ctx *RequestContext) {

@@ -20,8 +20,7 @@ func main() {
 	defer dbMap.Db.Close()
 
 	// SERVER
-	r := SetupRoutes()
-	http.Handle("/", r)
+	http.Handle("/", SetupRoutes())
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
