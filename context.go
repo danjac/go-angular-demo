@@ -18,6 +18,7 @@ type RequestContext struct {
 	Response http.ResponseWriter
 	Request  *http.Request
 	Vars     map[string]string
+	CSRF     *CSRF
 }
 
 func (ctx *RequestContext) GetSession(name string) (*sessions.Session, error) {
@@ -51,12 +52,24 @@ func (ctx *RequestContext) HandleError(err error) {
 	http.Error(ctx.Response, err.Error(), http.StatusInternalServerError)
 }
 
+func (ctx *RequestContext) CheckCSRF() bool {
+	return ctx.CSRF.Validate()
+}
+
 func NewRequestContext(w http.ResponseWriter, r *http.Request) *RequestContext {
-	return &RequestContext{Response: w, Request: r, Vars: mux.Vars(r)}
+	ctx := &RequestContext{Response: w, Request: r, Vars: mux.Vars(r)}
+	ctx.CSRF = NewCSRF(w, r)
+	return ctx
 }
 
 type AppHandler func(ctx *RequestContext)
 
 func (fn AppHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	ctx := NewRequestContext(w, r)
+	if !ctx.CheckCSRF() {
+		ctx.Render(http.StatusForbidden, "CSRF token missing")
+		return
+	}
 	fn(NewRequestContext(w, r))
 }
