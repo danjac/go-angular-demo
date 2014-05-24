@@ -5,13 +5,14 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"net/http"
+    "os"
 )
 
 var store *sessions.CookieStore
 
 func init() {
 	// TBD: grab key from environ
-	store = sessions.NewCookieStore([]byte("secret-key"))
+	store = sessions.NewCookieStore([]byte(os.Getenv("SECRET_KEY")))
 }
 
 type RequestContext struct {

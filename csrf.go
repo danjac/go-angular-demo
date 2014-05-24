@@ -4,6 +4,7 @@ import (
 	"code.google.com/p/xsrftoken"
 	"fmt"
 	"net/http"
+    "os"
 )
 
 const (
@@ -43,7 +44,8 @@ func (csrf *CSRF) Validate() bool {
 
 func (csrf *CSRF) Generate() string {
 	// TBD: set up secret key from env
-	return xsrftoken.Generate("secret-key", "xsrf", "POST")
+    secretKey := os.Getenv("SECRET_KEY")
+	return xsrftoken.Generate(secretKey, "xsrf", "POST")
 }
 
 func (csrf *CSRF) Save(token string) {
