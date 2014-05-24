@@ -3,6 +3,11 @@
 	"GoVersion": "go1.1.2",
 	"Deps": [
 		{
+			"ImportPath": "code.google.com/p/xsrftoken",
+			"Comment": "null-4",
+			"Rev": "bd5a620fff6e6167cccc9291a8d079402428a17a"
+		},
+		{
 			"ImportPath": "github.com/coopernurse/gorp",
 			"Comment": "v1.5",
 			"Rev": "242be3eec6e4d545d0eca24b5dc71236b71ac656"
@@ -22,11 +27,6 @@
 		{
 			"ImportPath": "github.com/gorilla/sessions",
 			"Rev": "65d3f02177b066fbe0c4682d5c01b1dbfab2947c"
-		},
-		{
-			"ImportPath": "github.com/justinas/nosurf",
-			"Comment": "0.1-21-gb3da8cb",
-			"Rev": "b3da8cbf9967ae5a9ee645884f98c00e7871f664"
 		},
 		{
 			"ImportPath": "github.com/mattn/go-sqlite3",
