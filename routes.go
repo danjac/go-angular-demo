@@ -1,9 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
-    "encoding/json"
 )
 
 func RenderJSON(w http.ResponseWriter, status int, value interface{}) {
@@ -21,11 +21,10 @@ func HandleError(w http.ResponseWriter, err error) {
 	http.Error(w, err.Error(), http.StatusInternalServerError)
 }
 
-
 func PostListHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := GetPosts()
 	if err != nil {
-		HandleError(w,err)
+		HandleError(w, err)
 		return
 	}
 	RenderJSON(w, http.StatusOK, posts)
@@ -35,7 +34,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	post := &Post{}
 	if err := json.NewDecoder(r.Body).Decode(post); err != nil {
-		HandleError(w,err)
+		HandleError(w, err)
 		return
 	}
 
@@ -45,7 +44,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := post.Save(); err != nil {
-		HandleError(w,err)
+		HandleError(w, err)
 		return
 	}
 	RenderJSON(w, http.StatusCreated, post)
@@ -54,7 +53,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 	post, err := GetPost(mux.Vars(r)["id"])
 	if err != nil {
-		HandleError(w,err)
+		HandleError(w, err)
 		return
 	}
 	if post == nil {
@@ -62,7 +61,7 @@ func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := post.Delete(); err != nil {
-		HandleError(w,err)
+		HandleError(w, err)
 		return
 	}
 

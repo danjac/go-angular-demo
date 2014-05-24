@@ -12,8 +12,8 @@ const (
 )
 
 type CSRF struct {
-    SecretKey string
-    Handler http.Handler
+	SecretKey string
+	Handler   http.Handler
 }
 
 func NewCSRF(secretKey string, handler http.Handler) *CSRF {
@@ -57,10 +57,10 @@ func (csrf *CSRF) Save(w http.ResponseWriter, token string) {
 	http.SetCookie(w, cookie)
 }
 
-func (csrf *CSRF) ServeHTTP (w http.ResponseWriter, r *http.Request) {
+func (csrf *CSRF) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !csrf.Validate(w, r) {
 		Render(w, http.StatusForbidden, "CSRF token missing")
 		return
 	}
-    csrf.Handler.ServeHTTP(w, r)
+	csrf.Handler.ServeHTTP(w, r)
 }
