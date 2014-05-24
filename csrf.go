@@ -4,7 +4,6 @@ import (
 	"code.google.com/p/xsrftoken"
 	"fmt"
 	"net/http"
-    "os"
 )
 
 const (
@@ -13,42 +12,40 @@ const (
 )
 
 type CSRF struct {
-	Request  *http.Request
-	Response http.ResponseWriter
+    SecretKey string
+    Handler http.Handler
 }
 
-func NewCSRF(w http.ResponseWriter, r *http.Request) *CSRF {
-	csrf := &CSRF{r, w}
+func NewCSRF(secretKey string, handler http.Handler) *CSRF {
+	csrf := &CSRF{secretKey, handler}
 	return csrf
 }
 
-func (csrf *CSRF) Validate() bool {
+func (csrf *CSRF) Validate(w http.ResponseWriter, r *http.Request) bool {
 
 	var token string
 
-	cookie, err := csrf.Request.Cookie(XsrfCookieName)
+	cookie, err := r.Cookie(XsrfCookieName)
 	if err != nil || cookie.Value == "" {
 		token = csrf.Generate()
-		csrf.Save(token)
+		csrf.Save(w, token)
 	} else {
 		token = cookie.Value
 	}
 
-	if csrf.Request.Method == "GET" {
+	if r.Method == "GET" {
 		return true
 	}
 
-	headerValue := csrf.Request.Header.Get(XsrfHeaderName)
+	headerValue := r.Header.Get(XsrfHeaderName)
 	return headerValue == token
 }
 
 func (csrf *CSRF) Generate() string {
-	// TBD: set up secret key from env
-    secretKey := os.Getenv("SECRET_KEY")
-	return xsrftoken.Generate(secretKey, "xsrf", "POST")
+	return xsrftoken.Generate(csrf.SecretKey, "xsrf", "POST")
 }
 
-func (csrf *CSRF) Save(token string) {
+func (csrf *CSRF) Save(w http.ResponseWriter, token string) {
 	cookie := &http.Cookie{
 		Name:     XsrfCookieName,
 		Path:     "/",
@@ -57,5 +54,13 @@ func (csrf *CSRF) Save(token string) {
 		Raw:      fmt.Sprintf("%s=%s", XsrfCookieName, token),
 		Unparsed: []string{fmt.Sprintf("token=%s", token)},
 	}
-	http.SetCookie(csrf.Response, cookie)
+	http.SetCookie(w, cookie)
+}
+
+func (csrf *CSRF) ServeHTTP (w http.ResponseWriter, r *http.Request) {
+	if !csrf.Validate(w, r) {
+		Render(w, http.StatusForbidden, "CSRF token missing")
+		return
+	}
+    csrf.Handler.ServeHTTP(w, r)
 }

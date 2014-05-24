@@ -3,53 +3,70 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"net/http"
+    "encoding/json"
 )
 
-func PostListHandler(ctx *RequestContext) {
-	posts, err := GetPosts()
-	if err != nil {
-		ctx.HandleError(err)
-		return
-	}
-	ctx.RenderJSON(http.StatusOK, posts)
+func RenderJSON(w http.ResponseWriter, status int, value interface{}) {
+	w.WriteHeader(status)
+	w.Header().Add("content-type", "application/json")
+	json.NewEncoder(w).Encode(value)
 }
 
-func CreatePostHandler(ctx *RequestContext) {
+func Render(w http.ResponseWriter, status int, msg string) {
+	w.WriteHeader(status)
+	w.Write([]byte(msg))
+}
+
+func HandleError(w http.ResponseWriter, err error) {
+	http.Error(w, err.Error(), http.StatusInternalServerError)
+}
+
+
+func PostListHandler(w http.ResponseWriter, r *http.Request) {
+	posts, err := GetPosts()
+	if err != nil {
+		HandleError(w,err)
+		return
+	}
+	RenderJSON(w, http.StatusOK, posts)
+}
+
+func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	post := &Post{}
-	if err := ctx.DecodeJSON(post); err != nil {
-		ctx.HandleError(err)
+	if err := json.NewDecoder(r.Body).Decode(post); err != nil {
+		HandleError(w,err)
 		return
 	}
 
 	if errors := post.Validate(); errors.Count() > 0 {
-		ctx.RenderJSON(http.StatusConflict, errors)
+		RenderJSON(w, http.StatusConflict, errors)
 		return
 	}
 
 	if err := post.Save(); err != nil {
-		ctx.HandleError(err)
+		HandleError(w,err)
 		return
 	}
-	ctx.RenderJSON(http.StatusCreated, post)
+	RenderJSON(w, http.StatusCreated, post)
 }
 
-func DeletePostHandler(ctx *RequestContext) {
-	post, err := GetPost(ctx.Var("id"))
+func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
+	post, err := GetPost(mux.Vars(r)["id"])
 	if err != nil {
-		ctx.HandleError(err)
+		HandleError(w,err)
 		return
 	}
 	if post == nil {
-		ctx.Render(http.StatusNotFound, "Post not found")
+		Render(w, http.StatusNotFound, "Post not found")
 		return
 	}
 	if err := post.Delete(); err != nil {
-		ctx.HandleError(err)
+		HandleError(w,err)
 		return
 	}
 
-	ctx.Render(http.StatusOK, "Post deleted")
+	Render(w, http.StatusOK, "Post deleted")
 }
 
 func SetupRoutes() *mux.Router {
@@ -59,9 +76,9 @@ func SetupRoutes() *mux.Router {
 	// API
 	s := r.PathPrefix("/api").Subrouter()
 
-	s.Handle("/", AppHandler(PostListHandler)).Methods("GET")
-	s.Handle("/", AppHandler(CreatePostHandler)).Methods("POST")
-	s.Handle("/{id}", AppHandler(DeletePostHandler)).Methods("DELETE")
+	s.HandleFunc("/", PostListHandler).Methods("GET")
+	s.HandleFunc("/", CreatePostHandler).Methods("POST")
+	s.HandleFunc("/{id}", DeletePostHandler).Methods("DELETE")
 
 	// STATIC FILES
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
