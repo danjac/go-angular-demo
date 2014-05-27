@@ -33,7 +33,7 @@ func (csrf *CSRF) Validate(w http.ResponseWriter, r *http.Request) bool {
 		token = cookie.Value
 	}
 
-	if r.Method == "GET" {
+	if r.Method == "GET" || r.Method == "OPTIONS" || r.Method == "HEAD" {
 		return true
 	}
 
