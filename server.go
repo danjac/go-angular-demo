@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/danjac/angular-react-compare/api/models"
 	"github.com/danjac/angular-react-compare/api/routes"
+	"github.com/danjac/angular-react-compare/api/csrf"
+	"github.com/gorilla/mux"
 	"log"
     "fmt"
 	"net/http"
@@ -34,14 +36,18 @@ func main() {
 	}
 	defer dbMap.Db.Close()
 
-	// STATIC FILES
+    r := mux.NewRouter()
 
-    http.Handle("/", http.FileServer(http.Dir("./public/")))
-    
     // API 
 
-    http.Handle("/api", routes.NewRouter(secretKey))
+    routes.Configure(r, "/api")
 
+	// STATIC FILES
+
+    r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
+
+    http.Handle("/", csrf.NewCSRF(secretKey, r))
+    
 	// SERVER
 
 	port := os.Getenv("PORT")

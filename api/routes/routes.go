@@ -55,13 +55,12 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 	render.Status(w, http.StatusOK, "Post deleted")
 }
 
-func NewRouter(secretKey string) http.Handler {
+func Configure(r *mux.Router, prefix string) {
 
-	r := mux.NewRouter()
+    s := r.PathPrefix(prefix).Subrouter()
 
-	r.HandleFunc("/", getPosts).Methods("GET")
-	r.HandleFunc("/", createPost).Methods("POST")
-	r.HandleFunc("/{id}", deletePost).Methods("DELETE")
+	s.HandleFunc("/", getPosts).Methods("GET")
+	s.HandleFunc("/", createPost).Methods("POST")
+	s.HandleFunc("/{id}", deletePost).Methods("DELETE")
 
-	return NewCSRF(secretKey, r)
 }
