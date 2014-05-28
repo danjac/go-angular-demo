@@ -19,6 +19,14 @@ func getEnvOrDie(name string) string {
 	return value
 }
 
+func getEnvOrDefault(name string, defaultValue string) string {
+	value := os.Getenv(name)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
 func main() {
 
 	// get all our env variables
@@ -27,9 +35,11 @@ func main() {
 	dbuser := getEnvOrDie("DB_USER")
 	dbpass := getEnvOrDie("DB_PASS")
 
+	logPrefix := getEnvOrDefault("LOG_PREFIX", "myapp")
+
 	secretKey := getEnvOrDie("SECRET_KEY")
 
-	dbMap, err := models.InitDb(dbname, dbuser, dbpass)
+	dbMap, err := models.InitDb(dbname, dbuser, dbpass, logPrefix)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,9 +59,7 @@ func main() {
 
 	// SERVER
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
+	port := getEnvOrDefault("PORT", "3000")
+
 	http.ListenAndServe(":"+port, nil)
 }

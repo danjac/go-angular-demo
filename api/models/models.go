@@ -68,7 +68,7 @@ func (post *Post) Validate() *Errors {
 	return errors
 }
 
-func InitDb(name string, user string, passwd string) (*gorp.DbMap, error) {
+func InitDb(name string, user string, passwd string, logPrefix string) (*gorp.DbMap, error) {
 	db, err := sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s password=%s", user, name, passwd))
 	if err != nil {
 		return nil, err
@@ -81,6 +81,6 @@ func InitDb(name string, user string, passwd string) (*gorp.DbMap, error) {
 		return nil, err
 	}
 
-	dbMap.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
+	dbMap.TraceOn("[sql]", log.New(os.Stdout, logPrefix+":", log.Lmicroseconds))
 	return dbMap, nil
 }
