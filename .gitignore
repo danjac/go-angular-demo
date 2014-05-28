@@ -4,3 +4,4 @@ server
 *.swp
 pkg
 node_modules
+.env

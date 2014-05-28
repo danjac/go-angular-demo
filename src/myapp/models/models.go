@@ -3,8 +3,9 @@ package models
 import (
 	"database/sql"
 	"github.com/coopernurse/gorp"
-	_ "github.com/mattn/go-sqlite3"
+    _ "github.com/lib/pq"
 	"log"
+    "fmt"
 	"os"
 )
 
@@ -67,13 +68,13 @@ func (post *Post) Validate() *Errors {
 	return errors
 }
 
-func InitDb(dbName string) (*gorp.DbMap, error) {
-	db, err := sql.Open("sqlite3", dbName)
+func InitDb(name string, user string, passwd string) (*gorp.DbMap, error) {
+	db, err := sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s password=%s", user, name, passwd))
 	if err != nil {
 		return nil, err
 	}
 
-	dbMap = &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
+	dbMap = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 	dbMap.AddTableWithName(Post{}, "posts").SetKeys(true, "Id")
 
 	if err = dbMap.CreateTablesIfNotExists(); err != nil {

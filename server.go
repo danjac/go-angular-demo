@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"myapp/csrf"
 	"myapp/models"
@@ -12,11 +11,24 @@ import (
 
 func main() {
 
-	dbName := flag.String("database", "/tmp/tweets.db", "Sqlite database name")
-	flag.Parse()
-
 	// DATABASE
-	dbMap, err := models.InitDb(*dbName)
+
+    dbname := os.Getenv("DB_NAME")
+    if dbname == "" {
+        log.Fatal("DB_NAME is missing")
+    }
+
+    dbuser := os.Getenv("DB_USER")
+    if dbuser == "" {
+        log.Fatal("DB_USER is missing")
+    }
+
+    dbpass := os.Getenv("DB_PASS")
+    if dbpass == "" {
+        log.Fatal("DB_PASS is missing")
+    }
+
+	dbMap, err := models.InitDb(dbname, dbuser, dbpass)
 	if err != nil {
 		log.Fatal(err)
 	}
