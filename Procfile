@@ -1,1 +1,1 @@
-web: angular-react-compare
+web: server
