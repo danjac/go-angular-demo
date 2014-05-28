@@ -23,7 +23,7 @@ func main() {
 	defer dbMap.Db.Close()
 
 	// SERVER
-	http.Handle("/", csrf.NewCSRF(os.Getenv("SECRET_KEY"), routes.SetupRoutes()))
+	http.Handle("/", csrf.NewCSRF(os.Getenv("SECRET_KEY"), routes.NewRouter()))
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"

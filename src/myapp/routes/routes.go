@@ -55,7 +55,7 @@ func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 	render.Status(w, http.StatusOK)
 }
 
-func SetupRoutes() *mux.Router {
+func NewRouter() *mux.Router {
 
 	r := mux.NewRouter()
 
