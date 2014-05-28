@@ -13,9 +13,9 @@ func JSON(w http.ResponseWriter, status int, value interface{}) {
 }
 
 // Renders a status
-func Status(w http.ResponseWriter, status int) {
+func Status(w http.ResponseWriter, status int, msg string) {
 	w.WriteHeader(status)
-	//w.Write([]byte(msg))
+	w.Write([]byte(msg))
 }
 
 // Writes a 500 error response

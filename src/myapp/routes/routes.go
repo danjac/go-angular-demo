@@ -44,7 +44,7 @@ func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if post == nil {
-		render.Status(w, http.StatusNotFound)
+		render.Status(w, http.StatusNotFound, "No post found")
 		return
 	}
 	if err := post.Delete(); err != nil {
@@ -52,7 +52,7 @@ func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.Status(w, http.StatusOK)
+	render.Status(w, http.StatusOK, "Post deleted")
 }
 
 func NewRouter() *mux.Router {
