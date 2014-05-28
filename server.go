@@ -13,20 +13,20 @@ func main() {
 
 	// DATABASE
 
-    dbname := os.Getenv("DB_NAME")
-    if dbname == "" {
-        log.Fatal("DB_NAME is missing")
-    }
+	dbname := os.Getenv("DB_NAME")
+	if dbname == "" {
+		log.Fatal("DB_NAME is missing")
+	}
 
-    dbuser := os.Getenv("DB_USER")
-    if dbuser == "" {
-        log.Fatal("DB_USER is missing")
-    }
+	dbuser := os.Getenv("DB_USER")
+	if dbuser == "" {
+		log.Fatal("DB_USER is missing")
+	}
 
-    dbpass := os.Getenv("DB_PASS")
-    if dbpass == "" {
-        log.Fatal("DB_PASS is missing")
-    }
+	dbpass := os.Getenv("DB_PASS")
+	if dbpass == "" {
+		log.Fatal("DB_PASS is missing")
+	}
 
 	dbMap, err := models.InitDb(dbname, dbuser, dbpass)
 	if err != nil {
