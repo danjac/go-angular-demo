@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"log"
+	"myapp/csrf"
+	"myapp/models"
+	"myapp/routes"
 	"net/http"
 	"os"
 )
@@ -13,14 +16,14 @@ func main() {
 	flag.Parse()
 
 	// DATABASE
-	dbMap, err := InitDb(*dbName)
+	dbMap, err := models.InitDb(*dbName)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer dbMap.Db.Close()
 
 	// SERVER
-	http.Handle("/", NewCSRF(os.Getenv("SECRET_KEY"), SetupRoutes()))
+	http.Handle("/", csrf.NewCSRF(os.Getenv("SECRET_KEY"), routes.SetupRoutes()))
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
