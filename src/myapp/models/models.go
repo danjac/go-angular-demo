@@ -2,10 +2,10 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/coopernurse/gorp"
-    _ "github.com/lib/pq"
+	_ "github.com/lib/pq"
 	"log"
-    "fmt"
 	"os"
 )
 
