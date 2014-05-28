@@ -2,4 +2,5 @@ angular-react-compare
 server
 *.db
 *.swp
+pkg
 node_modules
