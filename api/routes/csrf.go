@@ -1,4 +1,4 @@
-package csrf
+package routes
 
 import (
 	"code.google.com/p/xsrftoken"

@@ -1,32 +1,32 @@
 package main
 
 import (
-	"github.com/danjac/angular-react-compare/api/csrf"
 	"github.com/danjac/angular-react-compare/api/models"
 	"github.com/danjac/angular-react-compare/api/routes"
 	"log"
+    "fmt"
 	"net/http"
 	"os"
 )
 
+
+func getEnvOrDie(name string) string {
+    value := os.Getenv(name)
+    if value == "" {
+        log.Fatal(fmt.Sprintf("%s is missing", name))
+    }
+    return value
+}
+
 func main() {
 
-	// DATABASE
+    // get all our env variables
 
-	dbname := os.Getenv("DB_NAME")
-	if dbname == "" {
-		log.Fatal("DB_NAME is missing")
-	}
+    dbname := getEnvOrDie("DB_NAME")
+    dbuser := getEnvOrDie("DB_USER")
+    dbpass := getEnvOrDie("DB_PASS")
 
-	dbuser := os.Getenv("DB_USER")
-	if dbuser == "" {
-		log.Fatal("DB_USER is missing")
-	}
-
-	dbpass := os.Getenv("DB_PASS")
-	if dbpass == "" {
-		log.Fatal("DB_PASS is missing")
-	}
+    secretKey := getEnvOrDie("SECRET_KEY")
 
 	dbMap, err := models.InitDb(dbname, dbuser, dbpass)
 	if err != nil {
@@ -34,8 +34,16 @@ func main() {
 	}
 	defer dbMap.Db.Close()
 
+	// STATIC FILES
+
+    http.Handle("/", http.FileServer(http.Dir("./public/")))
+    
+    // API 
+
+    http.Handle("/api", routes.NewRouter(secretKey))
+
 	// SERVER
-	http.Handle("/", csrf.NewCSRF(os.Getenv("SECRET_KEY"), routes.NewRouter()))
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"

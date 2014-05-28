@@ -55,19 +55,13 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 	render.Status(w, http.StatusOK, "Post deleted")
 }
 
-func NewRouter() *mux.Router {
+func NewRouter(secretKey string) http.Handler {
 
 	r := mux.NewRouter()
 
-	// API
-	s := r.PathPrefix("/api").Subrouter()
+	r.HandleFunc("/", getPosts).Methods("GET")
+	r.HandleFunc("/", createPost).Methods("POST")
+	r.HandleFunc("/{id}", deletePost).Methods("DELETE")
 
-	s.HandleFunc("/", getPosts).Methods("GET")
-	s.HandleFunc("/", createPost).Methods("POST")
-	s.HandleFunc("/{id}", deletePost).Methods("DELETE")
-
-	// STATIC FILES
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
-
-	return r
+	return NewCSRF(secretKey, r)
 }
