@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func PostListHandler(w http.ResponseWriter, r *http.Request) {
+func getPosts(w http.ResponseWriter, r *http.Request) {
 	posts, err := models.GetPosts()
 	if err != nil {
 		render.Error(w, err)
@@ -17,7 +17,7 @@ func PostListHandler(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, http.StatusOK, posts)
 }
 
-func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
+func createPost(w http.ResponseWriter, r *http.Request) {
 
 	post := &models.Post{}
 	if err := json.NewDecoder(r.Body).Decode(post); err != nil {
@@ -37,7 +37,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, http.StatusCreated, post)
 }
 
-func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
+func deletePost(w http.ResponseWriter, r *http.Request) {
 	post, err := models.GetPost(mux.Vars(r)["id"])
 	if err != nil {
 		render.Error(w, err)
@@ -62,9 +62,9 @@ func NewRouter() *mux.Router {
 	// API
 	s := r.PathPrefix("/api").Subrouter()
 
-	s.HandleFunc("/", PostListHandler).Methods("GET")
-	s.HandleFunc("/", CreatePostHandler).Methods("POST")
-	s.HandleFunc("/{id}", DeletePostHandler).Methods("DELETE")
+	s.HandleFunc("/", getPosts).Methods("GET")
+	s.HandleFunc("/", createPost).Methods("POST")
+	s.HandleFunc("/{id}", deletePost).Methods("DELETE")
 
 	// STATIC FILES
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
