@@ -3,7 +3,7 @@ package csrf
 import (
 	"code.google.com/p/xsrftoken"
 	"fmt"
-	"myapp/render"
+	"github.com/danjac/angular-react-compare/api/render"
 	"net/http"
 )
 

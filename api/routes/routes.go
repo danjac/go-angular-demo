@@ -3,8 +3,8 @@ package routes
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"myapp/models"
-	"myapp/render"
+	"github.com/danjac/angular-react-compare/api/models"
+	"github.com/danjac/angular-react-compare/api/render"
 	"net/http"
 )
 

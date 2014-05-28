@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/danjac/angular-react-compare/api/csrf"
+	"github.com/danjac/angular-react-compare/api/models"
+	"github.com/danjac/angular-react-compare/api/routes"
 	"log"
-	"myapp/csrf"
-	"myapp/models"
-	"myapp/routes"
 	"net/http"
 	"os"
 )
