@@ -1,34 +1,33 @@
 package main
 
 import (
+	"fmt"
+	"github.com/danjac/angular-react-compare/api/csrf"
 	"github.com/danjac/angular-react-compare/api/models"
 	"github.com/danjac/angular-react-compare/api/routes"
-	"github.com/danjac/angular-react-compare/api/csrf"
 	"github.com/gorilla/mux"
 	"log"
-    "fmt"
 	"net/http"
 	"os"
 )
 
-
 func getEnvOrDie(name string) string {
-    value := os.Getenv(name)
-    if value == "" {
-        log.Fatal(fmt.Sprintf("%s is missing", name))
-    }
-    return value
+	value := os.Getenv(name)
+	if value == "" {
+		log.Fatal(fmt.Sprintf("%s is missing", name))
+	}
+	return value
 }
 
 func main() {
 
-    // get all our env variables
+	// get all our env variables
 
-    dbname := getEnvOrDie("DB_NAME")
-    dbuser := getEnvOrDie("DB_USER")
-    dbpass := getEnvOrDie("DB_PASS")
+	dbname := getEnvOrDie("DB_NAME")
+	dbuser := getEnvOrDie("DB_USER")
+	dbpass := getEnvOrDie("DB_PASS")
 
-    secretKey := getEnvOrDie("SECRET_KEY")
+	secretKey := getEnvOrDie("SECRET_KEY")
 
 	dbMap, err := models.InitDb(dbname, dbuser, dbpass)
 	if err != nil {
@@ -36,18 +35,18 @@ func main() {
 	}
 	defer dbMap.Db.Close()
 
-    r := mux.NewRouter()
+	r := mux.NewRouter()
 
-    // API 
+	// API
 
-    routes.Configure(r, "/api")
+	routes.Configure(r, "/api")
 
 	// STATIC FILES
 
-    r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
 
-    http.Handle("/", csrf.NewCSRF(secretKey, r))
-    
+	http.Handle("/", csrf.NewCSRF(secretKey, r))
+
 	// SERVER
 
 	port := os.Getenv("PORT")

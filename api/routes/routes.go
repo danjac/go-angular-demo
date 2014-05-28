@@ -2,9 +2,9 @@ package routes
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"github.com/danjac/angular-react-compare/api/models"
 	"github.com/danjac/angular-react-compare/api/render"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -57,7 +57,7 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 
 func Configure(r *mux.Router, prefix string) {
 
-    s := r.PathPrefix(prefix).Subrouter()
+	s := r.PathPrefix(prefix).Subrouter()
 
 	s.HandleFunc("/", getPosts).Methods("GET")
 	s.HandleFunc("/", createPost).Methods("POST")
