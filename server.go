@@ -49,7 +49,7 @@ func main() {
 
 	// API
 
-	routes.Configure(r, "/api")
+	routes.Configure(r.PathPrefix("/api").Subrouter())
 
 	// STATIC FILES
 
