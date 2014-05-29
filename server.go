@@ -61,5 +61,5 @@ func main() {
 
 	port := getEnvOrDefault("PORT", "3000")
 
-	http.ListenAndServe(":"+port, nil)
+	http.ListenAndServe(":"+port, r)
 }

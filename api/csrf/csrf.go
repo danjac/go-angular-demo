@@ -2,9 +2,9 @@ package csrf
 
 import (
 	"code.google.com/p/xsrftoken"
-	"fmt"
 	"github.com/danjac/angular-react-compare/api/render"
 	"net/http"
+	"time"
 )
 
 const (
@@ -28,8 +28,7 @@ func (csrf *CSRF) Validate(w http.ResponseWriter, r *http.Request) bool {
 
 	cookie, err := r.Cookie(XsrfCookieName)
 	if err != nil || cookie.Value == "" {
-		token = csrf.Generate()
-		csrf.Save(w, token)
+		token = csrf.Reset(w)
 	} else {
 		token = cookie.Value
 	}
@@ -38,8 +37,13 @@ func (csrf *CSRF) Validate(w http.ResponseWriter, r *http.Request) bool {
 		return true
 	}
 
-	headerValue := r.Header.Get(XsrfHeaderName)
-	return headerValue == token
+	return token == r.Header.Get(XsrfHeaderName)
+}
+
+func (csrf *CSRF) Reset(w http.ResponseWriter) string {
+	token := csrf.Generate()
+	csrf.Save(w, token)
+	return token
 }
 
 func (csrf *CSRF) Generate() string {
@@ -47,14 +51,18 @@ func (csrf *CSRF) Generate() string {
 }
 
 func (csrf *CSRF) Save(w http.ResponseWriter, token string) {
+
+	expires := time.Now().AddDate(0, 0, 1)
+
 	cookie := &http.Cookie{
-		Name:     XsrfCookieName,
-		Path:     "/",
-		MaxAge:   0,
-		HttpOnly: false,
-		Raw:      fmt.Sprintf("%s=%s", XsrfCookieName, token),
-		Unparsed: []string{fmt.Sprintf("token=%s", token)},
+		Name:       XsrfCookieName,
+		Value:      token,
+		Path:       "/",
+		MaxAge:     86400,
+		Expires:    expires,
+		RawExpires: expires.Format(time.UnixDate),
 	}
+
 	http.SetCookie(w, cookie)
 }
 
