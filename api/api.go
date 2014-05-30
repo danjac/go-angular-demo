@@ -43,7 +43,7 @@ func (app *Application) InitDb() error {
 		return err
 	}
 
-	app.DbMap, err = models.Configure(db, app.Config.LogPrefix)
+	app.DbMap, err = models.Init(db, app.Config.LogPrefix)
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (app *Application) InitRouter() {
 
 	// API
 
-	routes.Configure(app.Router.PathPrefix(app.Config.ApiPrefix).Subrouter())
+	routes.Init(app.Router.PathPrefix(app.Config.ApiPrefix).Subrouter())
 
 	// STATIC FILES
 

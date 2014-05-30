@@ -55,7 +55,7 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 	render.Status(w, http.StatusOK, "Post deleted")
 }
 
-func Configure(r *mux.Router) {
+func Init(r *mux.Router) {
 	r.HandleFunc("/", getPosts).Methods("GET")
 	r.HandleFunc("/", createPost).Methods("POST")
 	r.HandleFunc("/{id}", deletePost).Methods("DELETE")

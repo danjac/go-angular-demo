@@ -72,7 +72,7 @@ func (post *Post) Validate() *ValidationResult {
 	return result
 }
 
-func Configure(db *sql.DB, logPrefix string) (*gorp.DbMap, error) {
+func Init(db *sql.DB, logPrefix string) (*gorp.DbMap, error) {
 
 	dbMap = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 	dbMap.AddTableWithName(Post{}, "posts").SetKeys(true, "Id")
