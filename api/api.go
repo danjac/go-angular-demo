@@ -11,32 +11,39 @@ import (
 	"net/http"
 )
 
+type Config struct {
+	DbName, DbUser, DbPassword, LogPrefix, ApiPrefix, StaticPrefix, StaticDir, SecretKey string
+}
+
 type Application struct {
+	Config  *Config
 	DbMap   *gorp.DbMap
 	Router  *mux.Router
 	Handler http.Handler
 }
 
-func NewApp(dbname, dbuser, dbpass,
-	logPrefix, secretKey, apiPrefix, staticPrefix, staticDir string) (*Application, error) {
+func NewApp(config *Config) (*Application, error) {
 
-	app := &Application{}
+	app := &Application{Config: config}
 
-	if err := app.InitDb(dbname, dbuser, dbpass, logPrefix); err != nil {
+	if err := app.InitDb(); err != nil {
 		return nil, err
 	}
-	app.InitRouter(apiPrefix, staticPrefix, staticDir, secretKey)
+	app.InitRouter()
 	return app, nil
 }
 
-func (app *Application) InitDb(dbname, dbuser, dbpass, logPrefix string) error {
+func (app *Application) InitDb() error {
 
-	db, err := sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s password=%s", dbuser, dbname, dbpass))
+	db, err := sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s password=%s",
+		app.Config.DbUser,
+		app.Config.DbName,
+		app.Config.DbPassword))
 	if err != nil {
 		return err
 	}
 
-	app.DbMap, err = models.Configure(db, logPrefix)
+	app.DbMap, err = models.Configure(db, app.Config.LogPrefix)
 	if err != nil {
 		return err
 	}
@@ -44,18 +51,18 @@ func (app *Application) InitDb(dbname, dbuser, dbpass, logPrefix string) error {
 	return nil
 }
 
-func (app *Application) InitRouter(apiPrefix, staticPrefix, staticDir, secretKey string) {
+func (app *Application) InitRouter() {
 
 	app.Router = mux.NewRouter()
 
 	// API
 
-	routes.Configure(app.Router.PathPrefix(apiPrefix).Subrouter())
+	routes.Configure(app.Router.PathPrefix(app.Config.ApiPrefix).Subrouter())
 
 	// STATIC FILES
 
-	app.Router.PathPrefix(staticPrefix).Handler(http.FileServer(http.Dir(staticDir)))
-	app.Handler = csrf.NewCSRF(secretKey, app.Router)
+	app.Router.PathPrefix(app.Config.StaticPrefix).Handler(http.FileServer(http.Dir(app.Config.StaticDir)))
+	app.Handler = csrf.NewCSRF(app.Config.SecretKey, app.Router)
 }
 
 func (app *Application) Shutdown() {

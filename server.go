@@ -26,18 +26,18 @@ func getEnvOrDefault(name string, defaultValue string) string {
 
 func main() {
 
-	// get all our env variables
+	config := &api.Config{
+		DbName:       getEnvOrDie("DB_NAME"),
+		DbUser:       getEnvOrDie("DB_USER"),
+		DbPassword:   getEnvOrDie("DB_PASS"),
+		LogPrefix:    getEnvOrDefault("LOG_PREFIX", "myapp"),
+		SecretKey:    getEnvOrDie("SECRET_KEY"),
+		ApiPrefix:    "/api",
+		StaticPrefix: "/",
+		StaticDir:    "./public/",
+	}
 
-	dbname := getEnvOrDie("DB_NAME")
-	dbuser := getEnvOrDie("DB_USER")
-	dbpass := getEnvOrDie("DB_PASS")
-
-	logPrefix := getEnvOrDefault("LOG_PREFIX", "myapp")
-
-	secretKey := getEnvOrDie("SECRET_KEY")
-
-	app, err := api.NewApp(dbname, dbuser, dbpass, logPrefix,
-		secretKey, "/api", "/", "./public/")
+	app, err := api.NewApp(config)
 
 	if err != nil {
 		log.Fatal(err)
