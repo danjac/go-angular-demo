@@ -2,10 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/danjac/angular-react-compare/api/csrf"
-	"github.com/danjac/angular-react-compare/api/models"
-	"github.com/danjac/angular-react-compare/api/routes"
-	"github.com/gorilla/mux"
+	"github.com/danjac/angular-react-compare/api"
 	"log"
 	"net/http"
 	"os"
@@ -39,23 +36,15 @@ func main() {
 
 	secretKey := getEnvOrDie("SECRET_KEY")
 
-	dbMap, err := models.InitDb(dbname, dbuser, dbpass, logPrefix)
+	app, err := api.NewApp(dbname, dbuser, dbpass, logPrefix,
+		secretKey, "/api", "/", "./public/")
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer dbMap.Db.Close()
+	defer app.Shutdown()
 
-	r := mux.NewRouter()
-
-	// API
-
-	routes.Configure(r.PathPrefix("/api").Subrouter())
-
-	// STATIC FILES
-
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
-
-	http.Handle("/", csrf.NewCSRF(secretKey, r))
+	http.Handle("/", app.Handler)
 
 	// SERVER
 

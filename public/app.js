@@ -11,7 +11,7 @@ angular.module('postApp', ['ngResource'])
         $httpProvider.defaults.xsrfHeaderName = "X-CSRF-Token";
     }])
     .service('Post', ['$resource', 'urls', function ($resource, urls) {
-        return $resource(urls.api.Url, {id: '@id'});
+        return $resource(urls.apiUrl, {id: '@id'});
     }])
     .controller('PostCtrl', ['$scope', 'Post', function ($scope, Post) {
 

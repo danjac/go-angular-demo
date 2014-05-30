@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/coopernurse/gorp"
 	_ "github.com/lib/pq"
 	"log"
@@ -68,19 +67,15 @@ func (post *Post) Validate() *Errors {
 	return errors
 }
 
-func InitDb(name string, user string, passwd string, logPrefix string) (*gorp.DbMap, error) {
-	db, err := sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s password=%s", user, name, passwd))
-	if err != nil {
-		return nil, err
-	}
+func Configure(db *sql.DB, logPrefix string) (*gorp.DbMap, error) {
 
 	dbMap = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 	dbMap.AddTableWithName(Post{}, "posts").SetKeys(true, "Id")
 
-	if err = dbMap.CreateTablesIfNotExists(); err != nil {
+	if err := dbMap.CreateTablesIfNotExists(); err != nil {
 		return nil, err
 	}
-
 	dbMap.TraceOn("[sql]", log.New(os.Stdout, logPrefix+":", log.Lmicroseconds))
 	return dbMap, nil
+
 }
