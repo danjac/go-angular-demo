@@ -1,14 +1,17 @@
 'use strict';
 
 angular.module('postApp', ['ngResource'])
+    .constant('urls', {
+        apiUrl: '/api/:id'
+    })
     .config(['$resourceProvider', '$httpProvider', function ($resourceProvider, $httpProvider) {
         // Don't strip trailing slashes from calculated URLs
         $resourceProvider.defaults.stripTrailingSlashes = false;
         $httpProvider.defaults.xsrfCookieName = "csrf_token";
         $httpProvider.defaults.xsrfHeaderName = "X-CSRF-Token";
     }])
-    .service('Post', ['$resource', function ($resource) {
-        return $resource("/api/:id", {id: '@id'});
+    .service('Post', ['$resource', 'urls', function ($resource, urls) {
+        return $resource(urls.api.Url, {id: '@id'});
     }])
     .controller('PostCtrl', ['$scope', 'Post', function ($scope, Post) {
 

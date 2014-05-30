@@ -37,7 +37,7 @@ func (csrf *CSRF) Validate(w http.ResponseWriter, r *http.Request) bool {
 		return true
 	}
 
-	return token == r.Header.Get(XsrfHeaderName)
+	return token != "" && token == r.Header.Get(XsrfHeaderName)
 }
 
 func (csrf *CSRF) Reset(w http.ResponseWriter) string {
