@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/coopernurse/gorp"
-	"github.com/danjac/angular-react-compare/api/csrf"
-	"github.com/danjac/angular-react-compare/api/models"
-	"github.com/danjac/angular-react-compare/api/routes"
+	"github.com/danjac/go-angular-demo/api/csrf"
+	"github.com/danjac/go-angular-demo/api/models"
+	"github.com/danjac/go-angular-demo/api/routes"
 	"github.com/gorilla/mux"
 	"net/http"
 )

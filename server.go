@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/danjac/angular-react-compare/api"
+	"github.com/danjac/go-angular-demo/api"
 	"log"
 	"net/http"
 	"os"

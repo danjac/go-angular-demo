@@ -2,7 +2,7 @@ package csrf
 
 import (
 	"code.google.com/p/xsrftoken"
-	"github.com/danjac/angular-react-compare/api/render"
+	"github.com/danjac/go-angular-demo/api/render"
 	"net/http"
 	"time"
 )
