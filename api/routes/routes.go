@@ -25,8 +25,8 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if errors := post.Validate(); errors.Count() > 0 {
-		render.JSON(w, http.StatusConflict, errors)
+	if result := post.Validate(); !result.OK {
+		render.JSON(w, http.StatusConflict, result)
 		return
 	}
 

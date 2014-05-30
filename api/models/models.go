@@ -15,16 +15,18 @@ type Post struct {
 	Content string `json:"content"`
 }
 
-type Errors struct {
-	Fields map[string]string
+type ValidationResult struct {
+	Errors map[string]string `json:"errors"`
+	OK     bool              `json:"ok"`
 }
 
-func NewErrors() *Errors {
-	return &Errors{Fields: make(map[string]string)}
+func NewValidationResult() *ValidationResult {
+	return &ValidationResult{make(map[string]string), true}
 }
 
-func (errors Errors) Count() int {
-	return len(errors.Fields)
+func (result *ValidationResult) Error(field string, msg string) {
+	result.Errors[field] = msg
+	result.OK = false
 }
 
 func GetPosts() ([]Post, error) {
@@ -53,18 +55,18 @@ func (post *Post) Delete() error {
 	return err
 }
 
-func (post *Post) Validate() *Errors {
+func (post *Post) Validate() *ValidationResult {
 
-	errors := NewErrors()
+	result := NewValidationResult()
 
 	if post.Content == "" {
-		errors.Fields["content"] = "Content is missing"
+		result.Error("content", "Content is missing")
 	}
 	if len(post.Content) > 140 {
-		errors.Fields["content"] = "Content must be max 140 characters"
+		result.Error("content", "Content must be max 140 characters")
 	}
 
-	return errors
+	return result
 }
 
 func Configure(db *sql.DB, logPrefix string) (*gorp.DbMap, error) {
