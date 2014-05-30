@@ -4,4 +4,5 @@ server
 *.swp
 pkg
 node_modules
+public/bower_components
 .env

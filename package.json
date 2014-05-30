@@ -3,7 +3,7 @@
   "private": true,
   "name": "tweets",
   "description": "Simple test app",
-  "repository": "https://github.com/danjac/angular-react-compare",
+  "repository": "https://github.com/danjac/go-angular-demo",
   "license": "MIT",
   "devDependencies": {
     "karma": "~0.10",
