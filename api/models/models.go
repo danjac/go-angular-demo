@@ -2,11 +2,14 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/coopernurse/gorp"
 	_ "github.com/lib/pq"
 	"log"
 	"os"
 )
+
+const maxContentLength = 140
 
 var dbMap *gorp.DbMap
 
@@ -62,8 +65,8 @@ func (post *Post) Validate() *ValidationResult {
 	if post.Content == "" {
 		result.Error("content", "Content is missing")
 	}
-	if len(post.Content) > 140 {
-		result.Error("content", "Content must be max 140 characters")
+	if len(post.Content) > maxContentLength {
+		result.Error("content", fmt.Sprintf("Content must be max %d characters", maxContentLength))
 	}
 
 	return result

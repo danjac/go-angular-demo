@@ -11,9 +11,9 @@ func TestValidatePostIfContentTooLong(t *testing.T) {
 	p := Post{Content: s}
 	result := p.Validate()
 
-    if result.OK {
-        t.Error("Should be invalid")
-    }
+	if result.OK {
+		t.Error("Should be invalid")
+	}
 
 	msg, _ := result.Errors["content"]
 	if msg != "Content must be max 140 characters" {
@@ -26,9 +26,9 @@ func TestValidatePostIfContentEmpty(t *testing.T) {
 	p := Post{Content: ""}
 	result := p.Validate()
 
-    if result.OK {
-        t.Error("Should be invalid")
-    }
+	if result.OK {
+		t.Error("Should be invalid")
+	}
 
 	msg, _ := result.Errors["content"]
 	if msg != "Content is missing" {
