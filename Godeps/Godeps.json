@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/danjac/angular-react-compare",
+	"ImportPath": "github.com/danjac/go-angular-demo",
 	"GoVersion": "go1.2.2",
 	"Deps": [
 		{
