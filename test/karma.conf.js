@@ -1,30 +1,37 @@
+'use strict';
+
 module.exports = function(config){
-  config.set({
+    config.set({
 
-    basePath : '../',
+        basePath : '../',
 
-    files : [
-      'public/app.js',
-      //'test/angular-mocks.js',
-      'test/unit/**/*.js'
-    ],
+        files : [
+            'public/bower_components/angular/angular.min.js',
+            'public/bower_components/angular-resource/angular-resource.min.js',
+            'public/js/app.js',
+            'public/js/controllers.js',
+            'public/js/services.js',
+            'public/js/directives.js',
+            'test/angular-mocks.js',
+            'test/unit/**/*.js'
+        ],
 
-    autoWatch : true,
+        autoWatch : true,
 
-    frameworks: ['jasmine'],
+        frameworks: ['jasmine'],
 
-    browsers : ['Chrome'],
+        browsers : ['Firefox'],
 
-    plugins : [
+        plugins : [
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-jasmine'
-            ],
+        ],
 
-    junitReporter : {
-      outputFile: 'test_out/unit.xml',
-      suite: 'unit'
-    }
+        junitReporter : {
+            outputFile: 'test_out/unit.xml',
+            suite: 'unit'
+        }
 
-  });
+    });
 };

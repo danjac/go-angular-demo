@@ -10,6 +10,6 @@ describe('PostCtrl', function () {
         $controller('PostCtrl', {$scope: scope});
     }));
     it('should include some empty messages', function () {
-        expect(scope.posts).toBe([]);
+        expect(scope.posts.length).toBe(0);
     });
 });

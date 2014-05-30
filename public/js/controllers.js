@@ -3,6 +3,7 @@
 angular.module('postApp.controllers', ['postApp.services'])
     .controller('PostCtrl', ['$scope', 'Post', function ($scope, Post) {
 
+        $scope.posts = [];
         $scope.newPost = new Post();
 
         function getPosts() {
