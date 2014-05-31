@@ -26,7 +26,7 @@ func getEnvOrDefault(name string, defaultValue string) string {
 
 func main() {
 
-    env := getEnvOrDefault("ENV", "development")
+	env := getEnvOrDefault("ENV", "development")
 
 	config := &api.Config{
 		DbName:       getEnvOrDie("DB_NAME"),
@@ -35,7 +35,7 @@ func main() {
 		LogPrefix:    getEnvOrDefault("LOG_PREFIX", "myapp"),
 		SecretKey:    getEnvOrDie("SECRET_KEY"),
 		ApiPrefix:    "/api",
-        ServeStatic:   env == "development",
+		ServeStatic:  env == "development",
 		StaticPrefix: "/",
 		StaticDir:    "./public/",
 	}
