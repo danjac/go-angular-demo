@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('postApp', ['postApp.controllers'])
+angular.module('postApp', ['postApp.controllers', 'postApp.services', 'postApp.directives'])
     .constant('urls', {
         api: '/api/:id'
     })
