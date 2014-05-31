@@ -13,6 +13,7 @@ import (
 
 type Config struct {
 	DbName, DbUser, DbPassword, LogPrefix, ApiPrefix, StaticPrefix, StaticDir, SecretKey string
+    ServeStatic bool
 }
 
 type Application struct {
@@ -59,9 +60,11 @@ func (app *Application) InitRouter() {
 
 	routes.Init(app.Router.PathPrefix(app.Config.ApiPrefix).Subrouter())
 
-	// STATIC FILES
+	// STATIC FILES : FOR DEVELOPMENT
+    if app.Config.ServeStatic {
+	    app.Router.PathPrefix(app.Config.StaticPrefix).Handler(http.FileServer(http.Dir(app.Config.StaticDir)))
+    }
 
-	app.Router.PathPrefix(app.Config.StaticPrefix).Handler(http.FileServer(http.Dir(app.Config.StaticDir)))
 	app.Handler = csrf.NewCSRF(app.Config.SecretKey, app.Router)
 }
 
